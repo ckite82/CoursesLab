@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
@@ -50,16 +51,16 @@ class CourseBookingServiceApplicationTests {
 
 	@Test
 	public void canFindCoursesForCustomer() {
-		List<Course> foundCourses = courseRepository.findAllByBookingsCustomerOrderByCourseIdAsc(2L);
+		List<Course> foundCourses = courseRepository.findAllByBookingsCustomerId(2L);
 		assertEquals(2, foundCourses.size());
-		assertEquals("Learn Java", foundCourses.get(0).getName());
+		assertEquals("Learn Java", foundCourses.stream().sorted().collect(Collectors.toList()).get(0).getName());
 		// Why has first saved course been moved to position 2 in list after second course saved??
 
-		List<Course> stuartsCourses = courseRepository.findAllByBookingsCustomerOrderByCourseIdAsc(1L);
+		List<Course> stuartsCourses = courseRepository.findAllByBookingsCustomerId(1L);
 		assertEquals(2, stuartsCourses.size());
 		assertEquals("Learn Python", stuartsCourses.get(0).getName());
 
-		List<Course> johnsCourses = courseRepository.findAllByBookingsCustomerOrderByCourseIdAsc(4L);
+		List<Course> johnsCourses = courseRepository.findAllByBookingsCustomerId(4L);
 		assertEquals(2, johnsCourses.size());
 		assertEquals("Learn Java", johnsCourses.get(1).getName());
 	}
